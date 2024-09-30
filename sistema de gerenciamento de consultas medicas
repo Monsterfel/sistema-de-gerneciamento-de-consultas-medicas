@@ -1,0 +1,58 @@
+-- Criação do banco de dados
+SET SQL_SAFE_UPDATES = 0;
+CREATE DATABASE ConsultasMedicas;
+
+-- Uso do banco de dados
+USE ConsultasMedicas;
+
+-- Criação da tabela Pacientes
+CREATE TABLE Pacientes (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Nome VARCHAR(100) NOT NULL,
+    Telefone VARCHAR(15)
+);
+
+-- Criação da tabela Medicos
+CREATE TABLE Medicos (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Nome VARCHAR(100) NOT NULL,
+    Especialidade VARCHAR(50) NOT NULL
+);
+
+-- Criação da tabela Consultas
+CREATE TABLE Consultas (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    PacienteID INT,
+    MedicoID INT,
+    DataConsulta DATETIME,
+    FOREIGN KEY (PacienteID) REFERENCES Pacientes(ID),
+    FOREIGN KEY (MedicoID) REFERENCES Medicos(ID)
+);
+
+-- Inserção de dados na tabela Pacientes
+INSERT INTO Pacientes (Nome, Telefone) VALUES
+('Ana Costa', '1234-5678'),
+('Bruno Almeida', '9876-5432');
+
+-- Inserção de dados na tabela Medicos
+INSERT INTO Medicos (Nome, Especialidade) VALUES
+('Dr. Carlos Silva', 'Cardiologia'),
+('Dra. Fernanda Lima', 'Pediatria');
+
+-- Inserção de dados na tabela Consultas
+INSERT INTO Consultas (PacienteID, MedicoID, DataConsulta) VALUES
+(1, 1, '2024-10-01 10:00:00'),  -- Consulta de Ana Costa com Dr. Carlos Silva
+(2, 2, '2024-10-02 14:00:00');  -- Consulta de Bruno Almeida com Dra. Fernanda Lima
+
+-- Seleção de todas as consultas
+SELECT * FROM Consultas;
+
+-- Seleção de detalhes das consultas com informações de pacientes e médicos
+SELECT c.ID AS ConsultaID, p.Nome AS Paciente, m.Nome AS Medico, c.DataConsulta
+FROM Consultas c
+JOIN Pacientes p ON c.PacienteID = p.ID
+JOIN Medicos m ON c.MedicoID = m.ID;
+
+-- Exclusão de uma consulta
+DELETE FROM Consultas
+WHERE ID = 1;  -- Excluir a consulta com ID 1 (Ana Costa com Dr. Carlos Silva)
